@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>WCK Plow to Plate</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.css" rel="stylesheet" />
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1Ijoid2NraGJhc2UiLCJhIjoiY2p0NGc0aWkyMTRybjQ0cGh6NmhrZWdzaCJ9.Na6CPyIWu6NZ_txt0JdUIA';
+
+// Initialize the Map
+var map = new mapboxgl.Map({
+container: 'map', // container id
+style: 'mapbox://styles/wckhbase/ck69ptfab2guz1io20b1qmetf', // stylesheet location
+center: [-66.268000, 18.142000], // starting position [lng, lat]
+zoom: 8.4 // starting zoom
+});
+
+var sw = new mapboxgl.LngLat(-67.400, 17.800);
+var ne = new mapboxgl.LngLat(-65.160, 18.580);
+var llb = new mapboxgl.LngLatBounds(sw, ne);
+
+//Popup Feature Steps
+		map.on('click', function(e) {
+		  var features = map.queryRenderedFeatures(e.point, {
+		    layers: ['pr-plow-to-plate-fall-2019','2019-spring-grantees','spring-2019-declined','2018-fall-grantees','2018-spring-summer-grantees'] // replace this with the name of the layer
+		  });
+		  if (!features.length) {
+		    return;
+		  }
+		  var feature = features[0];
+		  var popup = new mapboxgl.Popup({ offset: [0, -15] })
+		    .setLngLat(feature.geometry.coordinates)
+		    .setHTML('<h3>' + feature.properties.Name + '</h3><p>' + feature.properties.Description + '</p>')
+		    .addTo(map);
+		});
+
+</script>
+
+</body>
+</html>
