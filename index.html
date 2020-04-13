@@ -1,49 +1,252 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8" />
-<title>WCK Plow to Plate</title>
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-<script src="https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.js"></script>
-<link href="https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.css" rel="stylesheet" />
-<style>
-	body { margin: 0; padding: 0; }
-	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
-</style>
-</head>
-<body>
-<div id="map"></div>
-<script>
-	mapboxgl.accessToken = 'pk.eyJ1Ijoid2NraGJhc2UiLCJhIjoiY2p0NGc0aWkyMTRybjQ0cGh6NmhrZWdzaCJ9.Na6CPyIWu6NZ_txt0JdUIA';
+  <head>
+    <meta charset='utf-8' />
+    <title>World Central Kitchen - Plow to Plate</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css' rel='stylesheet' />
+    <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
+    <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
+    <style>
+      body { margin: 0; padding: 0; }
+      #map { position: absolute; top: 0; bottom: 0; width: 100%; z-index: -1; }
+        .map-overlay {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.8);
+        margin-right: 20px;
+        font-family: 'Barlow', sans-serif;
+        overflow: auto;
+        border-radius: 5px; }
 
-// Initialize the Map
-var map = new mapboxgl.Map({
-container: 'map', // container id
-style: 'mapbox://styles/wckhbase/ck69ptfab2guz1io20b1qmetf', // stylesheet location
-center: [-66.268000, 18.142000], // starting position [lng, lat]
-zoom: 8.4 // starting zoom
-});
+      #menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        bottom:  0;
+        right: 0;
+        margin-right: 20px;
+        margin-bottom: 40px;
+        border-radius: 3px;
+        width: 120px;
+        border: 1px solid rgba(0,0,0,0.4);
+        font-family: 'Barlow', sans-serif; }
 
-var sw = new mapboxgl.LngLat(-67.400, 17.800);
-var ne = new mapboxgl.LngLat(-65.160, 18.580);
-var llb = new mapboxgl.LngLatBounds(sw, ne);
+      #menu a {
+        font-size: 12px;
+        font-weight: 800;
+        color: #D1E3E5;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 5px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0,0,0,0.25);
+        text-align: center; }
 
-//Popup Feature Steps
-		map.on('click', function(e) {
-		  var features = map.queryRenderedFeatures(e.point, {
-		    layers: ['pr-plow-to-plate-fall-2019','2019-spring-grantees','spring-2019-declined','2018-fall-grantees','2018-spring-summer-grantees'] // replace this with the name of the layer
-		  });
-		  if (!features.length) {
-		    return;
-		  }
-		  var feature = features[0];
-		  var popup = new mapboxgl.Popup({ offset: [0, -15] })
-		    .setLngLat(feature.geometry.coordinates)
-		    .setHTML('<h3>' + feature.properties.Name + '</h3><p>' + feature.properties.Description + '</p>')
-		    .addTo(map);
-		});
+        #menu a:last-child {
+          border: none; }
 
-</script>
+        .mapboxgl-popup-content h4 {
+        background: #11B0E5;
+        color: #fff;
+        margin: 0;
+        display: block;
+        padding: 10px;
+        border-radius: 3px 3px 0 0;
+        margin-top: 0px;
+        }
 
+      #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+        }
+
+      #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+        }
+
+      #menu a.active:hover {
+        background: #3074a4;
+        }
+
+        .mapboxgl-popup-content-wrapper {
+          padding: 1%;
+        }
+        .mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
+        margin-top: 15px;
+        }
+        .mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
+        border-bottom-color: #ffffff;
+        }
+
+    </style>
+
+  </head>
+  <body>
+    <body class="prose">
+      <header class="bg-orange-light color-white h-auto-mm h60">
+          <div class='flex-parent flex-parent--space-between-main w-full'>
+            <div class="flex-child ml120 mt24 mb12"><h3>World Central Kitchen - Plow to Plate</h3></div>
+          </div>
+      </header>
+
+      <style>
+
+      #buttons {
+      width: 100%;
+      margin: 0 auto;
+      }
+      .button {
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+      width: 15%;
+      padding: 8px;
+      border-radius: 3px;
+      margin-top: 10px;
+      font-size: 12px;
+      text-align: center;
+      color: #fff;
+      background: #e86027;
+      font-family: sans-serif;
+      font-weight: bold;
+      }
+
+        #menu {
+          position: absolute;
+	  bottom: 10px;
+          right: 50px;
+          background: #fff;
+          padding: 10px;
+          font-family: 'Open Sans', sans-serif;
+        }
+
+        .mapboxgl-popup-close-button {
+			  display: none;
+			}
+
+        .mapboxgl-popup-content {
+			  font: 400 15px/22px 'Barlow', Sans-serif;
+			  padding: 0;
+			  width: 300px;
+        		  max-height: 250px;
+        		  overflow: auto;
+			}
+
+        .mapboxgl-popup-content-wrapper {
+        	padding: 1%;
+        }
+
+        .mapboxgl-popup-content h3 {
+			  background: #f68b22;
+			  color: #fff;
+			  margin: 0;
+			  display: block;
+			  padding: 10px;
+			  border-radius: 3px 3px 0 0;
+			  font-weight: 600;
+			  margin-top: 0px;
+			}
+
+		.mapboxgl-popup-content h4 {
+			  margin: 0;
+			  display: block;
+			  padding: 5px;
+			  font-weight: 400;
+			}
+
+		.mapboxgl-popup-content div {
+			  padding: 10px;
+			}
+
+		.mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
+		  margin-top: 15px;
+		}
+
+		.mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
+		  border-bottom-color: #f68b22;
+		}
+
+	      .legend {
+		background-color: #fff;
+		border-radius: 3px;
+		bottom: 30px;
+		box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+		font: 12px/20px 'Barlow', sans-serif;
+		padding: 10px;
+		position: absolute;
+		right: 10px;
+		bottom: 70px;
+		z-index: 1;
+		}
+
+		.legend h4 {
+		margin: 0 0 10px;
+		}
+
+		.legend div span {
+		border-radius: 50%;
+		display: inline-block;
+		height: 10px;
+		margin-right: 5px;
+		width: 10px;
+		}
+
+      </style>
+
+      <div id="map"></div>
+      <ul id="buttons">
+      <li id="button-es" class="button">Español</li>
+      </ul>
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.min.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.css' type='text/css' />
+
+    <div id="map"></div>
+
+	   <div id='circle-legend' class='legend'>
+	      <h4>Legend</h4>
+	       <div><span style='background-color: #f68b22'></span>Fall 2019 Grantees</div>
+	       <div><span style='background-color: #fab818'></span>Spring 2019 Grantees</div>
+         <div><span style='background-color: #8cc540'></span>Spring & Fall 2018 Grantees</div>
+	   </div>
+
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1Ijoid2NraGJhc2UiLCJhIjoiY2p0NGc0aWkyMTRybjQ0cGh6NmhrZWdzaCJ9.Na6CPyIWu6NZ_txt0JdUIA'; // replace this with your access token
+// Set bounds
+    var bounds = [
+    [-67.400, 17.400], // Southwest coordinates
+    [-65.160, 18.980]  // Northeast coordinates
+    ];
+
+// Initialize map
+    var map = new mapboxgl.Map({
+      attributionControl: false,
+      container: 'map',
+      style: 'mapbox://styles/wckhbase/ck69ptfab2guz1io20b1qmetf', // replace this with your style URL
+      center: [-66.268000, 18.142000],
+      zoom: 6.5,
+      maxBounds: bounds // Sets bounds as max
+    });
+
+// Add zoom and rotation controls to the map.
+   var nav = new mapboxgl.NavigationControl();
+   map.addControl(nav, 'bottom-left'); // allows for reposition of navigation controls
+// disable map rotation using right click + drag
+   map.dragRotate.disable();
+// disable map rotation using touch rotation gesture
+   map.touchZoomRotate.disableRotation();
+// attribution control allows for attribution to be hidden for less visual clutter
+    map.addControl(new mapboxgl.AttributionControl({
+        compact: true }));
+// full screen control
+    var nav = new mapboxgl.FullscreenControl();
+    map.addControl(nav, 'bottom-right');
+
+    </script>
 </body>
 </html>
