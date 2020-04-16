@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset='utf-8' />
     <title>World Central Kitchen - Plow to Plate</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
@@ -8,47 +8,109 @@
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css' rel='stylesheet' />
     <script async defer src="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.js"></script>
     <link href="https://api.mapbox.com/mapbox-assembly/v0.21.2/assembly.min.css" rel="stylesheet">
-    <style>
-      body { margin: 0; padding: 0; }
-      #map { position: absolute; top: 0; bottom: 0; width: 100%; z-index: -1; }
+		<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.min.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.css' type='text/css' />
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+    <link rel="stylesheet" href="style.css">
+		<style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; z-index:-1; }
         .map-overlay {
         position: absolute;
         bottom: 0;
         right: 0;
         background: rgba(255, 255, 255, 0.8);
         margin-right: 20px;
-        font-family: 'Barlow', sans-serif;
+        font-family: Arial, sans-serif;
         overflow: auto;
-        border-radius: 5px; }
-
-      #menu {
-        background: #fff;
-        position: absolute;
-        z-index: 1;
-        bottom:  0;
-        right: 0;
-        margin-right: 20px;
-        margin-bottom: 40px;
         border-radius: 3px;
-        width: 120px;
-        border: 1px solid rgba(0,0,0,0.4);
-        font-family: 'Barlow', sans-serif; }
-
-      #menu a {
-        font-size: 12px;
-        font-weight: 800;
-        color: #D1E3E5;
-        display: block;
-        margin: 0;
-        padding: 0;
-        padding: 5px;
-        text-decoration: none;
-        border-bottom: 1px solid rgba(0,0,0,0.25);
-        text-align: center; }
-
+        }
+        #menu {
+          background: #fff;
+          position: absolute;
+          z-index: 1;
+          bottom:  0;
+          right: 0;
+          margin-right: 20px;
+          margin-bottom: 40px;
+          border-radius: 3px;
+          width: 120px;
+          border: 1px solid rgba(0,0,0,0.4);
+          font-family: 'Barlow', sans-serif;
+        }
+        #menu a {
+          font-size: 12px;
+          font-weight: 800;
+          color: #fff;
+          display: block;
+          margin: 0;
+          padding: 0;
+          padding: 5px;
+          text-decoration: none;
+          border-bottom: 1px solid rgba(0,0,0,0.25);
+          text-align: center;
+        }
         #menu a:last-child {
-          border: none; }
-
+          border: none;
+        }
+        #menu a:hover {
+					background-color: #f8f8f8;
+          color: #000000;
+        }
+        #menu a.active {
+					background-color: #f68b22;≤
+          color: #000000;
+        }
+        #menu a.active:hover {
+          background: #F2F3F4;
+        }
+        #toggle {
+          background: #fff;
+          position: absolute;
+          z-index: 1;
+          bottom:  0;
+          left: 0;
+          margin-left: 20px;
+          margin-bottom: 40px;
+          border-radius: 3px;
+          width: 210px;
+          border: 1px solid rgba(0,0,0,0.4);
+          font-family: 'Barlow', sans-serif;
+        }
+        #toggle a {
+          font-size: 12px;
+          font-weight: 800;
+          color: #fff;
+          display: block;
+          margin: 0;
+          padding: 0;
+          padding: 5px;
+          text-decoration: none;
+          border-bottom: 1px solid rgba(0,0,0,0.25);
+          text-align: left;
+        }
+        #toggle a:last-child {
+          border: none;
+        }
+        #toggle a:hover {
+          background-color: #f8f8f8;
+          color: #000000;
+        }
+        #toggle a.active {
+          background-color: #f68b22;≤
+          color: #000000;
+        }
+        #toggle a.active:hover {
+          background: #F2F3F4;
+        }
+        .mapboxgl-popup-close-button {
+        display: none;
+        }
+        .mapboxgl-popup-content {
+          width: 250px;
+          max-height: 150px;
+          overflow: auto;
+        }
         .mapboxgl-popup-content h4 {
         background: #11B0E5;
         color: #fff;
@@ -57,20 +119,6 @@
         padding: 10px;
         border-radius: 3px 3px 0 0;
         margin-top: 0px;
-        }
-
-      #menu a:hover {
-        background-color: #f8f8f8;
-        color: #404040;
-        }
-
-      #menu a.active {
-        background-color: #3887be;
-        color: #ffffff;
-        }
-
-      #menu a.active:hover {
-        background: #3074a4;
         }
 
         .mapboxgl-popup-content-wrapper {
@@ -83,170 +131,218 @@
         border-bottom-color: #ffffff;
         }
 
-    </style>
-
-  </head>
-  <body>
-    <body class="prose">
-      <header class="bg-orange-light color-white h-auto-mm h60">
-          <div class='flex-parent flex-parent--space-between-main w-full'>
-            <div class="flex-child ml120 mt24 mb12"><h3>World Central Kitchen - Plow to Plate</h3></div>
-          </div>
-      </header>
-
-      <style>
-
-      #buttons {
-      width: 100%;
-      margin: 0 auto;
-      }
-      .button {
-      display: inline-block;
-      position: relative;
-      cursor: pointer;
-      width: 15%;
-      padding: 8px;
-      border-radius: 3px;
-      margin-top: 10px;
-      font-size: 12px;
-      text-align: center;
-      color: #fff;
-      background: #e86027;
-      font-family: sans-serif;
-      font-weight: bold;
-      }
-
-        #menu {
-          position: absolute;
-	  bottom: 10px;
-          right: 50px;
-          background: #fff;
+        #legend {
           padding: 10px;
-          font-family: 'Open Sans', sans-serif;
+          background: #11B0E5;
+          color: #fff;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+          line-height: 18px;
+          height: 120px;
+          margin-bottom: 40px;
+          width: 260px;
+          z-index:1;
+        }
+        .legend-key {
+        display: inline-block;
+        border-radius: 50%;
+        border: 1.5px solid white;
+        width: 10px;
+        height: 10px;
+        margin-right: 5px;
         }
 
-        .mapboxgl-popup-close-button {
-			  display: none;
-			}
+				#buttons {
+	      width: 100%;
+	      margin: 0 auto;
+	      }
+	      .button {
+	      display: inline-block;
+	      position: relative;
+	      cursor: pointer;
+	      width: 15%;
+	      padding: 8px;
+	      border-radius: 3px;
+	      margin-top: 10px;
+	      font-size: 12px;
+	      text-align: center;
+	      color: #fff;
+	      background: #e86027;
+	      font-family: sans-serif;
+	      font-weight: bold;
+	      }
 
-        .mapboxgl-popup-content {
-			  font: 400 15px/22px 'Barlow', Sans-serif;
-			  padding: 0;
-			  width: 300px;
-        		  max-height: 250px;
-        		  overflow: auto;
-			}
+    </style>
+</head>
+<body class="prose">
+  <header class="bg-orange-light color-white h-auto-mm h60">
+      <div class='flex-parent flex-parent--space-between-main w-full'>
+        <div class="flex-child ml120 mt24 mb12"><h3>World Central Kitchen - Plow to Plate</h3></div>
+      </div>
+  </header>
 
-        .mapboxgl-popup-content-wrapper {
-        	padding: 1%;
-        }
+<nav id="menu"></nav>
+<nav id="toggle"></nav>
+<div id='map'></div>
+<ul id="buttons">
+<li id="button-es" class="button">Español</li>
+</ul>
 
-        .mapboxgl-popup-content h3 {
-			  background: #f68b22;
-			  color: #fff;
-			  margin: 0;
-			  display: block;
-			  padding: 10px;
-			  border-radius: 3px 3px 0 0;
-			  font-weight: 600;
-			  margin-top: 0px;
-			}
+<script>
 
-		.mapboxgl-popup-content h4 {
-			  margin: 0;
-			  display: block;
-			  padding: 5px;
-			  font-weight: 400;
-			}
+var transformRequest = (url, resourceType) => {
+        var isMapboxRequest =
+          url.slice(8, 22) === "api.mapbox.com" ||
+          url.slice(10, 26) === "tiles.mapbox.com";
+        return {
+          url: isMapboxRequest
+            ? url.replace("?", "?pluginName=sheetMapper&")
+            : url
+        };
+      };
 
-		.mapboxgl-popup-content div {
-			  padding: 10px;
-			}
+	mapboxgl.accessToken = 'pk.eyJ1Ijoid2NraGJhc2UiLCJhIjoiY2p0NGc0aWkyMTRybjQ0cGh6NmhrZWdzaCJ9.Na6CPyIWu6NZ_txt0JdUIA';
 
-		.mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
-		  margin-top: 15px;
-		}
+	var bounds = [
+	[-67.400, 17.400], // Southwest coordinates
+	[-65.160, 18.980]  // Northeast coordinates
+	];
 
-		.mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
-		  border-bottom-color: #f68b22;
-		}
+		var map = new mapboxgl.Map({
+    attributionControl: false,
+    container: 'map', // container id
+    style: 'mapbox://styles/wckhbase/ck69ptfab2guz1io20b1qmetf', // stylesheet location
+    center: [-66.268000, 18.142000], // starting position [lng, lat]
+    zoom: 6.5 , // starting zoom
+		maxBounds: bounds ,
+		transformRequest: transformRequest
+  });
 
-	      .legend {
-		background-color: #fff;
-		border-radius: 3px;
-		bottom: 30px;
-		box-shadow: 0 1px 2px rgba(0,0,0,0.10);
-		font: 12px/20px 'Barlow', sans-serif;
-		padding: 10px;
-		position: absolute;
-		right: 10px;
-		bottom: 70px;
-		z-index: 1;
-		}
-
-		.legend h4 {
-		margin: 0 0 10px;
-		}
-
-		.legend div span {
-		border-radius: 50%;
-		display: inline-block;
-		height: 10px;
-		margin-right: 5px;
-		width: 10px;
-		}
-
-      </style>
-
-      <div id="map"></div>
-      <ul id="buttons">
-      <li id="button-es" class="button">Español</li>
-      </ul>
-
-    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.min.js'></script>
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.css' type='text/css' />
-
-    <div id="map"></div>
-
-	   <div id='circle-legend' class='legend'>
-	      <h4>Legend</h4>
-	       <div><span style='background-color: #f68b22'></span>Fall 2019 Grantees</div>
-	       <div><span style='background-color: #fab818'></span>Spring 2019 Grantees</div>
-         <div><span style='background-color: #8cc540'></span>Spring & Fall 2018 Grantees</div>
-	   </div>
-
-    <script>
-    mapboxgl.accessToken = 'pk.eyJ1Ijoid2NraGJhc2UiLCJhIjoiY2p0NGc0aWkyMTRybjQ0cGh6NmhrZWdzaCJ9.Na6CPyIWu6NZ_txt0JdUIA'; // replace this with your access token
-// Set bounds
-    var bounds = [
-    [-67.400, 17.400], // Southwest coordinates
-    [-65.160, 18.980]  // Northeast coordinates
-    ];
-
-// Initialize map
-    var map = new mapboxgl.Map({
-      attributionControl: false,
-      container: 'map',
-      style: 'mapbox://styles/wckhbase/ck69ptfab2guz1io20b1qmetf', // replace this with your style URL
-      center: [-66.268000, 18.142000],
-      zoom: 6.5,
-      maxBounds: bounds // Sets bounds as max
-    });
-
-// Add zoom and rotation controls to the map.
-   var nav = new mapboxgl.NavigationControl();
-   map.addControl(nav, 'bottom-left'); // allows for reposition of navigation controls
-// disable map rotation using right click + drag
-   map.dragRotate.disable();
-// disable map rotation using touch rotation gesture
-   map.touchZoomRotate.disableRotation();
+    var hoverdStateID = null;
 // attribution control allows for attribution to be hidden for less visual clutter
     map.addControl(new mapboxgl.AttributionControl({
         compact: true }));
-// full screen control
-    var nav = new mapboxgl.FullscreenControl();
-    map.addControl(nav, 'bottom-right');
+// disable map rotation using right click + drag
+		map.dragRotate.disable();
+// disable map rotation using touch rotation gesture
+		map.touchZoomRotate.disableRotation();
+    // Add zoom and rotation controls to the map.
+  //map.addControl(new mapboxgl.NavigationControl());
+      //function mapReset() {
+    //}
 
-    </script>
+  map.on('load', function(){
+  var toggleableLayerIds = [ 'Farms'];
+  for (var i = 0; i < toggleableLayerIds.length; i++) {
+    var id = toggleableLayerIds[i];
+
+      //click event for pop-ups to each layer
+      map.on('click', toggleableLayerIds[i], function (e) {
+        var coordinates = e.features[0].geometry.coordinates.slice();
+        var name = e.features[0].properties.Name;
+        var cohort = e.features[0].properties.Cohort;
+        var type = e.features[0].properties.Type;
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            //coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+        new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML('<h4>' + name + '</h4>' + '<b>'+ cohort + '</b>')
+          .addTo(map);
+      });
+
+      //toggling functionality
+      var link = document.createElement('a');
+      link.href = '#';
+      link.className = 'active';
+      link.textContent = id;
+      link.onclick = function (e) {
+        var clickedLayer = this.textContent;
+        e.preventDefault();
+        e.stopPropagation();
+        var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+        if (visibility === 'visible') {
+          map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+          this.className = '';
+        } else {
+          this.className = 'active';
+          map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+        }
+      };
+      var layers = document.getElementById('menu');
+      layers.appendChild(link);
+  }
+    //add cohort toggle
+    var toggleableLayerIds = ['2018 Fall Grantees'];
+    var colors = ['#26a9e1'];
+
+  for (var i = 0; i < toggleableLayerIds.length; i++) {
+    var id = toggleableLayerIds[i];
+    var color = colors[i];
+      //click event for pop-ups to each layer
+      map.on('click', toggleableLayerIds[i], function (e) {
+        var coordinates = e.features[0].geometry.coordinates.slice();
+        var name = e.features[0].properties.Name;
+        var cohort = e.features[0].properties.Cohort;
+        var type = e.features[0].properties.Type;
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+        new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML('<h4>' + name + '</h4>' + '<b>'+ cohort + '</b>')
+          .addTo(map);
+      });
+      //toggling functionality
+      var link = document.createElement('a');
+      link.href = '#';
+      link.className = 'active';
+      var key = document.createElement('span');
+      key.className = 'legend-key';
+      key.style.backgroundColor = color;
+      link.appendChild(key);
+      var value = document.createElement('span');
+      value.innerHTML = id;
+      link.appendChild(value);
+      link.onclick = function (e) {
+        var clickedLayer = this.textContent;
+        e.preventDefault();
+        e.stopPropagation();
+        var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+        if (visibility === 'visible') {
+          map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+          this.className = '';
+        } else {
+          this.className = 'active';
+          map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+        }
+      };
+      var layers = document.getElementById('toggle');
+      layers.appendChild(link);
+  }
+
+    //add legend
+    //var labels = ['Farms', 'Businesses', 'Restaurants', 'School', 'Butcher', 'Fishery', 'Association', 'Grocery', 'Rabbit'];
+    //var icons = ['PRfarm.svg', 'PRtruck.svg', 'PRrestaurant.svg', 'PRbook.svg', 'PRcow.svg', 'PRassociation.svg', 'PRgrocery.svg', 'PRrabbit.svg'];
+
+
+    //for (i = 0; i < labels.length; i++) {
+  //var label = labels[i];
+  //var icon = icons[i];
+  //var item = document.createElement('div');
+  //var key = document.createElement('span');
+  //key.className = 'legend-key';
+  //key.style.img = icon;
+
+  //var list = document.createElement('span');
+  //value.innerHTML = label;
+  //item.appendChild(key);
+  //legend.appendChild(list);
+  //legend.appendChild(item);
+  //from before script tag <div class='map-overlay' id='legend'></div>
+  //}
+});
+
+</script>
+
 </body>
 </html>
